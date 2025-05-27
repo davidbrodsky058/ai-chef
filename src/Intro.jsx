@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const IntroContainer = styled.div`
   min-height: 100vh;
@@ -61,6 +62,8 @@ const StartButton = styled(motion.button)`
 `;
 
 const Intro = () => {
+  const navigate = useNavigate();
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -80,8 +83,7 @@ const Intro = () => {
   };
 
   const handleStart = () => {
-    // Add your navigation logic here
-    console.log('Navigate to ingredients page');
+    navigate('/catalog');
   };
 
   return (
@@ -128,4 +130,4 @@ const Intro = () => {
   );
 };
 
-export default Intro; 
+export default Intro;
