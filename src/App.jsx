@@ -9,11 +9,15 @@ import Level from './level'
 function App() {
     const navigate = useNavigate();
     const [recipeData, setRecipeData] = useState({
-        מצרכים: [],
-        "העדפות טעם": [],
-        "זמן הכנה": [],
-        "רמת בישול": []
+        ingredients: [],
+        taste_preferences: [],
+        preparation_time: [],
+        cooking_level: []
     });
+
+    const handleStart = () => {
+        navigate('/catalog');
+    };
 
     const handleIngredientsSubmit = (data) => {
         setRecipeData(prev => ({ ...prev, ...data }));
@@ -39,7 +43,7 @@ function App() {
 
     return (
         <Routes>
-            <Route path="/" element={<Intro />} />
+            <Route path="/" element={<Intro onStart={handleStart} />} />
             <Route path="/catalog" element={<Catalog onIngredientsSubmit={handleIngredientsSubmit} />} />
             <Route path="/taste" element={<Taset onTasteSubmit={handleTasteSubmit} />} />
             <Route path="/time" element={<Time onTimeSubmit={handleTimeSubmit} />} />
