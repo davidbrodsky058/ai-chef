@@ -9,6 +9,10 @@ function App() {
         <Routes>
             <Route path="/" element={<Intro />} />
             <Route path="/catalog" element={<Catalog />} />
+            <Route path='/taste' element={<Taste />} />
+            <Route path='/time' element={<Time />} />
+            <Route path="/level" element={<Level />} />
+            <Route path="/responsAi" element={<ResponsAi />} />
         </Routes>
     )
 
