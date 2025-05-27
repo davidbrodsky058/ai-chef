@@ -1,4 +1,4 @@
-  import React, { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
@@ -119,7 +119,7 @@ const categories = {
   }
 };
 
-const Catalog = () => {
+const Catalog = ({ onIngredientsSubmit }) => {
   const [selectedItems, setSelectedItems] = useState({});
   const [otherItems, setOtherItems] = useState({});
 
@@ -141,13 +141,32 @@ const Catalog = () => {
   };
 
   const handleContinue = () => {
-    // Prepare data for AI processing
-    const selectedData = {
-      selectedItems,
-      otherItems
+    // Create array of selected ingredients
+    const selectedIngredients = [];
+
+    // Add checked items
+    Object.entries(selectedItems).forEach(([category, items]) => {
+      Object.entries(items).forEach(([item, isSelected]) => {
+        if (isSelected) {
+          selectedIngredients.push(item);
+        }
+      });
+    });
+
+    // Add other items from input fields
+    Object.values(otherItems).forEach(item => {
+      if (item && item.trim() !== '') {
+        selectedIngredients.push(item.trim());
+      }
+    });
+
+    // Create the formatted object with title
+    const formattedData = {
+      "מצרכים": selectedIngredients
     };
-    console.log('Data to be sent to AI:', selectedData);
-    // Add navigation logic here
+
+    // Pass the formatted data to App component
+    onIngredientsSubmit(formattedData);
   };
 
   return (
