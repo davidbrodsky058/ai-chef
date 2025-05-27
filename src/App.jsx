@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
-import Intro from './Intro'
-import Catalog from './Catalog'
-import Taset from './taset'
-import Time from './time'
-import Level from './level'
+
+// Page Components
+import Intro from './pages/Intro'
+import Catalog from './pages/Catalog'
+import Taste from './pages/Taste'
+import Time from './pages/Time'
+import Level from './pages/level'
+import ResponsAi from './pages/responsAi'
 
 function App() {
     const navigate = useNavigate();
+    
+    // Application State
     const [recipeData, setRecipeData] = useState({
         ingredients: [],
         taste_preferences: [],
@@ -15,6 +20,7 @@ function App() {
         cooking_level: []
     });
 
+    // Navigation Handlers
     const handleStart = () => {
         navigate('/catalog');
     };
@@ -38,16 +44,17 @@ function App() {
         const finalData = { ...recipeData, ...data };
         setRecipeData(finalData);
         console.log("Final Recipe Data:", finalData);
-        // Here you can navigate to the results page or send data to AI
+        navigate('/result');
     };
 
     return (
         <Routes>
             <Route path="/" element={<Intro onStart={handleStart} />} />
             <Route path="/catalog" element={<Catalog onIngredientsSubmit={handleIngredientsSubmit} />} />
-            <Route path="/taste" element={<Taset onTasteSubmit={handleTasteSubmit} />} />
+            <Route path="/taste" element={<Taste onTasteSubmit={handleTasteSubmit} />} />
             <Route path="/time" element={<Time onTimeSubmit={handleTimeSubmit} />} />
             <Route path="/level" element={<Level onLevelSubmit={handleLevelSubmit} />} />
+            <Route path="/result" element={<ResponsAi recipeData={recipeData} />} />
         </Routes>
     )
 }

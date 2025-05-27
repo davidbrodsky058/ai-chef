@@ -1,37 +1,39 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import './style.css';
+import '../style.css';
 
 const buttonVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0 }
 };
 
-function Level({ onLevelSubmit }) {
-    const [selectedLevel, setSelectedLevel] = useState('');
+const timeEmojis = {
+    'Under 30 minutes': '⚡',
+    '30-60 minutes': '⏰',
+    '1-2 hours': '🕐',
+    'Over 2 hours': '👨‍🍳'
+};
 
-    const levels = [
-        'Beginner - Simple Recipes',
-        'Intermediate - More Complex Dishes',
-        'Advanced - Challenging Recipes'
-    ];
+function Time({ onTimeSubmit }) {
+    const [selectedTime, setSelectedTime] = useState('');
+    const timeOptions = Object.keys(timeEmojis);
 
     const handleContinue = () => {
-        const levelData = {
-            "cooking_level": [selectedLevel]
+        const timeData = {
+            "preparation_time": [selectedTime]
         };
-        onLevelSubmit(levelData);
+        onTimeSubmit(timeData);
     };
 
     return (
-        <div className="level-container">
+        <div className="page-container">
             <motion.h1
                 className="page-title"
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                What's Your Cooking Level? 👨‍🍳
+                How Much Time Do You Have? ⏱️
             </motion.h1>
             <motion.div
                 className="grid grid-1"
@@ -40,37 +42,40 @@ function Level({ onLevelSubmit }) {
                 variants={{
                     visible: {
                         transition: {
-                            staggerChildren: 0.1
+                            staggerChildren: 0.15
                         }
                     }
                 }}
             >
-                {levels.map((level) => (
+                {timeOptions.map((time) => (
                     <motion.button
-                        key={level}
-                        className={`btn ${selectedLevel === level ? 'btn-primary' : ''}`}
-                        onClick={() => setSelectedLevel(level)}
+                        key={time}
+                        className={`btn ${selectedTime === time ? 'btn-primary' : ''}`}
+                        onClick={() => setSelectedTime(time)}
                         variants={buttonVariants}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        {level}
+                        <span className="emoji">{timeEmojis[time]}</span>
+                        {time}
                     </motion.button>
                 ))}
             </motion.div>
             <motion.button
-                className="btn btn-accent"
+                className="continue-button"
                 onClick={handleContinue}
+                disabled={!selectedTime}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: selectedTime ? 1.05 : 1 }}
+                whileTap={{ scale: selectedTime ? 0.95 : 1 }}
             >
-                Continue ✨
+                <span>Continue</span>
+                <span className="emoji">⏱️</span>
             </motion.button>
         </div>
     );
 }
 
-export default Level;
+export default Time; 

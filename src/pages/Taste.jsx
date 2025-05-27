@@ -1,34 +1,31 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import './style.css';
+import '../style.css';
 
 const buttonVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0 }
 };
 
 const tasteEmojis = {
-    'Spicy': '🌶️',
     'Sweet': '🍯',
-    'Sour': '🍋',
     'Salty': '🧂',
-    'Umami': '🍜',
-    'Fresh': '🌿',
-    'Rich': '🥘',
-    'Crunchy': '🥜'
+    'Spicy': '🌶️',
+    'Sour': '🍋',
+    'Umami': '🍄',
+    'Bitter': '☕'
 };
 
-function Taset({ onTasteSubmit }) {
+function Taste({ onTasteSubmit }) {
     const [selectedTastes, setSelectedTastes] = useState([]);
-
-    const tastes = Object.keys(tasteEmojis);
+    const tasteOptions = Object.keys(tasteEmojis);
 
     const toggleTaste = (taste) => {
-        setSelectedTastes(prev => 
-            prev.includes(taste)
-                ? prev.filter(t => t !== taste)
-                : [...prev, taste]
-        );
+        if (selectedTastes.includes(taste)) {
+            setSelectedTastes(selectedTastes.filter(t => t !== taste));
+        } else {
+            setSelectedTastes([...selectedTastes, taste]);
+        }
     };
 
     const handleContinue = () => {
@@ -39,7 +36,7 @@ function Taset({ onTasteSubmit }) {
     };
 
     return (
-        <div className="taste-container">
+        <div className="page-container">
             <motion.h1
                 className="page-title"
                 initial={{ opacity: 0, y: -50 }}
@@ -49,44 +46,46 @@ function Taset({ onTasteSubmit }) {
                 What Flavors Do You Prefer? 🍽️
             </motion.h1>
             <motion.div
-                className="grid grid-3"
+                className="grid grid-2"
                 initial="hidden"
                 animate="visible"
                 variants={{
                     visible: {
                         transition: {
-                            staggerChildren: 0.1
+                            staggerChildren: 0.15
                         }
                     }
                 }}
             >
-                {tastes.map((taste) => (
+                {tasteOptions.map((taste) => (
                     <motion.button
                         key={taste}
                         className={`btn ${selectedTastes.includes(taste) ? 'btn-primary' : ''}`}
                         onClick={() => toggleTaste(taste)}
                         variants={buttonVariants}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                     >
-                        <span>{tasteEmojis[taste]}</span>
+                        <span className="emoji">{tasteEmojis[taste]}</span>
                         {taste}
                     </motion.button>
                 ))}
             </motion.div>
             <motion.button
-                className="btn btn-accent"
+                className="continue-button"
                 onClick={handleContinue}
+                disabled={selectedTastes.length === 0}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: selectedTastes.length > 0 ? 1.05 : 1 }}
+                whileTap={{ scale: selectedTastes.length > 0 ? 0.95 : 1 }}
             >
-                Continue ✨
+                <span>Continue</span>
+                <span className="emoji">🍽️</span>
             </motion.button>
         </div>
     );
 }
 
-export default Taset;
+export default Taste; 
