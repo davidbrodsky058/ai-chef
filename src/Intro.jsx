@@ -1,132 +1,99 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import './style.css';
 
-const IntroContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-  text-align: center;
-`;
-
-const Title = styled(motion.h1)`
-  font-size: 3.5rem;
-  color: #2c3e50;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-`;
-
-const Description = styled(motion.p)`
-  font-size: 1.2rem;
-  color: #34495e;
-  max-width: 600px;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-`;
-
-const Features = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  max-width: 1000px;
-  margin: 2rem 0;
-`;
-
-const FeatureCard = styled(motion.div)`
-  background: white;
-  padding: 1.5rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const StartButton = styled(motion.button)`
-  padding: 1rem 2.5rem;
-  font-size: 1.2rem;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-
-  &:hover {
-    background: #2980b9;
-    transform: translateY(-2px);
+const features = [
+  {
+    title: "Smart Recipe Generation",
+    description: "Get personalized recipe suggestions based on your available ingredients"
+  },
+  {
+    title: "Taste Preferences",
+    description: "Customize recipes according to your taste preferences"
+  },
+  {
+    title: "Time Management",
+    description: "Find recipes that fit your available cooking time"
+  },
+  {
+    title: "Skill Level Matching",
+    description: "Get recipes that match your cooking expertise"
   }
-`;
+];
 
-const Intro = () => {
-  const navigate = useNavigate();
-  
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
-  };
-
+const Intro = ({ onStart }) => {
   const handleStart = () => {
-    navigate('/catalog');
+    if (typeof onStart === 'function') {
+      onStart();
+    }
   };
 
   return (
-    <IntroContainer>
+    <motion.div 
+      className="intro-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.h1
+        className="intro-title"
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        AI Chef Assistant
+      </motion.h1>
+
+      <motion.p
+        className="intro-description"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        Your personal cooking companion that helps you create delicious meals 
+        with the ingredients you have at hand.
+      </motion.p>
+
       <motion.div
-        variants={containerVariants}
+        className="features-grid"
         initial="hidden"
         animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.15
+            }
+          }
+        }}
       >
-        <Title variants={itemVariants}>
-          Welcome to AI Chef Assistant
-        </Title>
-        
-        <Description variants={itemVariants}>
-          Transform your available ingredients into delicious meals! Our AI-powered system helps you discover recipes based on what you already have in your kitchen.
-        </Description>
-
-        <Features>
-          <FeatureCard variants={itemVariants} whileHover={{ scale: 1.05 }}>
-            <h3>Smart Recipe Matching</h3>
-            <p>Enter your ingredients and let our AI find the perfect recipes for you</p>
-          </FeatureCard>
-
-          <FeatureCard variants={itemVariants} whileHover={{ scale: 1.05 }}>
-            <h3>Reduce Food Waste</h3>
-            <p>Make the most of what you have and minimize food waste</p>
-          </FeatureCard>
-
-          <FeatureCard variants={itemVariants} whileHover={{ scale: 1.05 }}>
-            <h3>Quick & Easy</h3>
-            <p>Get instant recipe suggestions tailored to your available ingredients</p>
-          </FeatureCard>
-        </Features>
-
-        <StartButton
-          variants={itemVariants}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleStart}
-        >
-          Let's Start Cooking
-        </StartButton>
+        {features.map((feature, index) => (
+          <motion.div
+            key={index}
+            className="feature-card"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 }
+            }}
+            transition={{ duration: 0.5 }}
+          >
+            <h3 className="feature-title">{feature.title}</h3>
+            <p className="feature-description">{feature.description}</p>
+          </motion.div>
+        ))}
       </motion.div>
-    </IntroContainer>
+
+      <motion.button
+        className="btn-start"
+        onClick={handleStart}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Start Cooking
+      </motion.button>
+    </motion.div>
   );
 };
 

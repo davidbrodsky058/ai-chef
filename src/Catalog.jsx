@@ -1,127 +1,54 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-
-const CatalogContainer = styled.div`
-  min-height: 100vh;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-`;
-
-const Title = styled(motion.h1)`
-  text-align: center;
-  color: #2c3e50;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-`;
-
-const CategoriesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const CategoryCard = styled(motion.div)`
-  background: white;
-  border-radius: 15px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const CategoryTitle = styled.h2`
-  color: #34495e;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const ItemsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-`;
-
-const ItemCheckbox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  
-  input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-  }
-  
-  label {
-    cursor: pointer;
-    font-size: 1rem;
-    color: #2c3e50;
-  }
-`;
-
-const OtherInput = styled.div`
-  margin-top: 1rem;
-  
-  input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #cbd5e0;
-    border-radius: 5px;
-    font-size: 1rem;
-    
-    &:focus {
-      outline: none;
-      border-color: #3498db;
-    }
-  }
-`;
-
-const ContinueButton = styled(motion.button)`
-  display: block;
-  margin: 2rem auto;
-  padding: 1rem 2.5rem;
-  font-size: 1.2rem;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-
-  &:hover {
-    background: #2980b9;
-  }
-`;
+import { motion, AnimatePresence } from 'framer-motion';
+import './style.css';
 
 const categories = {
   vegetables: {
-    icon: "🥬",
-    items: ["Cucumber", "Tomato", "Carrot", "Onion", "Potato", "Bell Pepper", "Lettuce", "Garlic"]
+    name: "Vegetables",
+    items: [
+      "Cucumber", "Tomato", "Carrot", "Onion", "Potato", "Bell Pepper", "Lettuce", "Garlic",
+      "Zucchini", "Eggplant", "Mushrooms", "Spinach", "Broccoli", "Cauliflower", "Sweet Potato",
+      "Asparagus", "Green Beans", "Corn", "Peas", "Celery"
+    ]
   },
-  meat: {
-    icon: "🍗",
-    items: ["Chicken Breast", "Chicken Thighs", "Ground Beef", "Steak", "Turkey", "Lamb"]
+  proteins: {
+    name: "Proteins",
+    items: [
+      "Chicken Breast", "Chicken Thighs", "Ground Beef", "Steak", "Turkey", "Lamb",
+      "Salmon", "Tuna", "Shrimp", "Tofu", "Eggs", "Tempeh", "Pork Chops", "Duck",
+      "Cod", "Sardines", "Lentils", "Chickpeas", "Black Beans", "Quinoa"
+    ]
   },
   dairy: {
-    icon: "🥛",
-    items: ["Milk", "Cheese", "Yogurt", "Butter", "Cream", "Eggs"]
+    name: "Dairy & Alternatives",
+    items: [
+      "Milk", "Cheese", "Yogurt", "Butter", "Cream", "Heavy Cream", "Sour Cream",
+      "Mozzarella", "Parmesan", "Cheddar", "Cottage Cheese", "Almond Milk",
+      "Soy Milk", "Oat Milk", "Coconut Milk", "Cream Cheese", "Feta", "Ricotta"
+    ]
   },
   pantry: {
-    icon: "🥫",
-    items: ["Rice", "Pasta", "Canned Tomatoes", "Beans", "Tuna", "Corn"]
+    name: "Pantry",
+    items: [
+      "Rice", "Pasta", "Canned Tomatoes", "Beans", "Flour", "Sugar", "Olive Oil",
+      "Soy Sauce", "Vinegar", "Honey", "Maple Syrup", "Bread", "Nuts", "Seeds",
+      "Dried Herbs", "Stock Cubes", "Coconut Oil", "Tomato Paste", "Mustard", "Mayo"
+    ]
   },
   spices: {
-    icon: "🌶️",
-    items: ["Salt", "Pepper", "Paprika", "Cumin", "Oregano", "Basil"]
+    name: "Spices & Herbs",
+    items: [
+      "Salt", "Black Pepper", "Paprika", "Cumin", "Oregano", "Basil", "Thyme",
+      "Rosemary", "Cinnamon", "Nutmeg", "Curry Powder", "Chili Powder", "Garlic Powder",
+      "Onion Powder", "Ginger", "Turmeric", "Cardamom", "Bay Leaves", "Sage", "Coriander"
+    ]
   }
 };
 
 const Catalog = ({ onIngredientsSubmit }) => {
   const [selectedItems, setSelectedItems] = useState({});
-  const [otherItems, setOtherItems] = useState({});
+  const [openCategory, setOpenCategory] = useState(null);
+  const [customItems, setCustomItems] = useState({});
 
   const handleItemChange = (category, item) => {
     setSelectedItems(prev => ({
@@ -133,15 +60,29 @@ const Catalog = ({ onIngredientsSubmit }) => {
     }));
   };
 
-  const handleOtherItemsChange = (category, value) => {
-    setOtherItems(prev => ({
+  const handleCustomItemChange = (category, value) => {
+    setCustomItems(prev => ({
       ...prev,
       [category]: value
     }));
   };
 
+  const getSelectedCount = () => {
+    let count = 0;
+    // Count checked items
+    Object.values(selectedItems).forEach(category => {
+      Object.values(category).forEach(isSelected => {
+        if (isSelected) count++;
+      });
+    });
+    // Count custom items
+    Object.values(customItems).forEach(item => {
+      if (item && item.trim()) count++;
+    });
+    return count;
+  };
+
   const handleContinue = () => {
-    // Create array of selected ingredients
     const selectedIngredients = [];
 
     // Add checked items
@@ -153,78 +94,88 @@ const Catalog = ({ onIngredientsSubmit }) => {
       });
     });
 
-    // Add other items from input fields
-    Object.values(otherItems).forEach(item => {
-      if (item && item.trim() !== '') {
+    // Add custom items
+    Object.values(customItems).forEach(item => {
+      if (item && item.trim()) {
         selectedIngredients.push(item.trim());
       }
     });
 
-    // Create the formatted object with title
-    const formattedData = {
-      "מצרכים": selectedIngredients
-    };
-
-    // Pass the formatted data to App component
-    onIngredientsSubmit(formattedData);
+    onIngredientsSubmit({
+      "ingredients": selectedIngredients
+    });
   };
 
   return (
-    <CatalogContainer>
-      <Title
+    <div className="catalog-container">
+      <motion.h1
+        className="page-title"
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        What do you have in your fridge? 🍽️
-      </Title>
+        Select Your Available Ingredients
+      </motion.h1>
 
-      <CategoriesGrid>
-        {Object.entries(categories).map(([category, { icon, items }]) => (
-          <CategoryCard
-            key={category}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CategoryTitle>
-              {icon} {category.charAt(0).toUpperCase() + category.slice(1)}
-            </CategoryTitle>
+      <div className="accordion">
+        {Object.entries(categories).map(([key, { name, items }]) => (
+          <div key={key}>
+            <motion.div
+              className="accordion-header"
+              onClick={() => setOpenCategory(openCategory === key ? null : key)}
+              whileHover={{ scale: 1.01 }}
+            >
+              <h2>{name}</h2>
+              <span>{openCategory === key ? '−' : '+'}</span>
+            </motion.div>
             
-            <ItemsGrid>
-              {items.map(item => (
-                <ItemCheckbox key={item}>
-                  <input
-                    type="checkbox"
-                    id={`${category}-${item}`}
-                    checked={selectedItems[category]?.[item] || false}
-                    onChange={() => handleItemChange(category, item)}
-                  />
-                  <label htmlFor={`${category}-${item}`}>{item}</label>
-                </ItemCheckbox>
-              ))}
-            </ItemsGrid>
-
-            <OtherInput>
-              <input
-                type="text"
-                placeholder={`Other ${category}...`}
-                value={otherItems[category] || ''}
-                onChange={(e) => handleOtherItemsChange(category, e.target.value)}
-              />
-            </OtherInput>
-          </CategoryCard>
+            <AnimatePresence>
+              {openCategory === key && (
+                <motion.div
+                  className="accordion-content"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {items.map(item => (
+                    <div key={item} className="checkbox-wrapper">
+                      <input
+                        type="checkbox"
+                        id={`${key}-${item}`}
+                        checked={selectedItems[key]?.[item] || false}
+                        onChange={() => handleItemChange(key, item)}
+                      />
+                      <label htmlFor={`${key}-${item}`}>{item}</label>
+                    </div>
+                  ))}
+                  <div className="checkbox-wrapper" style={{ gridColumn: '1/-1' }}>
+                    <input
+                      type="text"
+                      placeholder={`Add other ${name.toLowerCase()}...`}
+                      value={customItems[key] || ''}
+                      onChange={(e) => handleCustomItemChange(key, e.target.value)}
+                      className="input"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         ))}
-      </CategoriesGrid>
+      </div>
 
-      <ContinueButton
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+      <motion.button
+        className="btn btn-accent"
         onClick={handleContinue}
+        disabled={getSelectedCount() === 0}
+        whileHover={{ scale: getSelectedCount() > 0 ? 1.05 : 1 }}
+        whileTap={{ scale: getSelectedCount() > 0 ? 0.95 : 1 }}
+        style={{ marginTop: '2rem' }}
       >
-        Continue to Recipe Generation
-      </ContinueButton>
-    </CatalogContainer>
+        Continue with {getSelectedCount()} ingredients
+      </motion.button>
+    </div>
   );
 };
 

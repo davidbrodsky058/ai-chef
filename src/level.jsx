@@ -11,27 +11,27 @@ function Level({ onLevelSubmit }) {
     const [selectedLevel, setSelectedLevel] = useState('');
 
     const levels = [
-        'מתחיל - מתכונים פשוטים',
-        'בינוני - מתכונים מורכבים יותר',
-        'מתקדם - מתכונים מאתגרים'
+        'Beginner - Simple Recipes',
+        'Intermediate - More Complex Dishes',
+        'Advanced - Challenging Recipes'
     ];
 
     const handleContinue = () => {
         const levelData = {
-            "רמת בישול": [selectedLevel]
+            "cooking_level": [selectedLevel]
         };
         onLevelSubmit(levelData);
     };
 
     return (
-        <div className="page-container">
+        <div className="level-container">
             <motion.h1
                 className="page-title"
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                באיזו רמת בישול אתה? 👨‍🍳
+                What's Your Cooking Level? 👨‍🍳
             </motion.h1>
             <motion.div
                 className="grid grid-1"
@@ -67,7 +67,7 @@ function Level({ onLevelSubmit }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                המשך ✨
+                Continue ✨
             </motion.button>
         </div>
     );

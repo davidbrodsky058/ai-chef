@@ -8,14 +8,14 @@ const buttonVariants = {
 };
 
 const tasteEmojis = {
-    'חריף': '🌶️',
-    'מתוק': '🍯',
-    'חמוץ': '🍋',
-    'מלוח': '🧂',
-    'אומאמי': '🍜',
-    'מרענן': '🌿',
-    'עשיר': '🥘',
-    'קראנצ׳י': '🥜'
+    'Spicy': '🌶️',
+    'Sweet': '🍯',
+    'Sour': '🍋',
+    'Salty': '🧂',
+    'Umami': '🍜',
+    'Fresh': '🌿',
+    'Rich': '🥘',
+    'Crunchy': '🥜'
 };
 
 function Taset({ onTasteSubmit }) {
@@ -33,20 +33,20 @@ function Taset({ onTasteSubmit }) {
 
     const handleContinue = () => {
         const tasteData = {
-            "העדפות טעם": selectedTastes
+            "taste_preferences": selectedTastes
         };
         onTasteSubmit(tasteData);
     };
 
     return (
-        <div className="page-container">
+        <div className="taste-container">
             <motion.h1
                 className="page-title"
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                אילו טעמים אתה מעדיף? 🍽️
+                What Flavors Do You Prefer? 🍽️
             </motion.h1>
             <motion.div
                 className="grid grid-3"
@@ -83,7 +83,7 @@ function Taset({ onTasteSubmit }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                המשך ✨
+                Continue ✨
             </motion.button>
         </div>
     );

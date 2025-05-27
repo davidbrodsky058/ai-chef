@@ -8,10 +8,10 @@ const buttonVariants = {
 };
 
 const timeEmojis = {
-    'עד 30 דקות': '⚡',
-    '30-60 דקות': '⏰',
-    'שעה עד שעתיים': '🕐',
-    'יותר משעתיים': '👨‍🍳'
+    'Under 30 minutes': '⚡',
+    '30-60 minutes': '⏰',
+    '1-2 hours': '🕐',
+    'Over 2 hours': '👨‍🍳'
 };
 
 function Time({ onTimeSubmit }) {
@@ -21,20 +21,20 @@ function Time({ onTimeSubmit }) {
 
     const handleContinue = () => {
         const timeData = {
-            "זמן הכנה": [selectedTime]
+            "preparation_time": [selectedTime]
         };
         onTimeSubmit(timeData);
     };
 
     return (
-        <div className="page-container">
+        <div className="time-container">
             <motion.h1
                 className="page-title"
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
             >
-                כמה זמן יש לך להכין את המנה? ⏱️
+                How Much Time Do You Have? ⏱️
             </motion.h1>
             <motion.div
                 className="grid grid-1"
@@ -71,7 +71,7 @@ function Time({ onTimeSubmit }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                המשך ✨
+                Continue ✨
             </motion.button>
         </div>
     );
